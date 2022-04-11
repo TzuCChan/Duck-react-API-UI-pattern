@@ -1,23 +1,31 @@
-import logo from './logo.svg';
+import React, {useState, useEffect} from 'react'
+import { Routes, Route } from 'react-router-dom';
+import axios from 'axios'
+import Navbar from './Navbar.jsx';
+import Home from './Home.jsx'
 import './App.css';
 
 function App() {
+  const [duckIds, setDuckIds] = useState([])
+  
+  const getDucks = async () => {
+    let results = await axios("https://random-d.uk/api/v2/list")
+    setDuckIds(results.data.images)
+  }
+
+  useEffect(() => {
+    getDucks()
+  }, [])
+
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Navbar />
+      <div>
+        <Routes>
+          <Route path="/" element={<Home duckIds={duckIds} />} />
+        </Routes>
+      </div>
     </div>
   );
 }
